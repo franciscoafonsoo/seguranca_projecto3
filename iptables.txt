@@ -55,21 +55,19 @@ Testar seguintes ligações. Devem todas funcionar a seguir a aplicar as regras:
 
 REGRAS, por esta ordem:
 
-	- ligações já estabelecida devem ser aceites:
+	- ligações já estabelecida devem ser aceites: CHECK
 
 		$ sudo iptables –A INPUT –m state –-state ESTABLISHED,RELATED –j ACCEPT
 
 		$ sudo iptables –A OUTPUT –m state –-state ESTABLISHED,RELATED –j ACCEPT
 
-	- clientes de qualquer ip de entrada e saida (port 23457):
+	- clientes de qualquer ip de entrada e saida (port 23457): CHECK
 		
 		$ sudo iptables -A INPUT -p tcp --dport 23457 -j ACCEPT
-
-		$ sudo iptables -A OUTPUT -p tcp --sport 23457 -j ACCEPT
 	
 	- ssh gcc.alunos.di.fc.ul.pt de entrada:
 
-		$ sudo iptables -A INPUT -s 10.101.151.5 -p ssh -j ACCEPT
+		$ sudo iptables -A INPUT -s 10.101.151.5 -p tcp --dport ssh -j ACCEPT
 
 	- icmp gcc.alunos.di.fc.ul.pt de saida:
 
