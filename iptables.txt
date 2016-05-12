@@ -42,7 +42,7 @@ Ligações Permitidas OUTPUT:
 
 	- icmp, only to gcc.alunos.di.fc.ul.pt
 
-		$ sudo iptables -OUTPUT -d gcc.alunos.di.fc.ul.pt -p icmp -j ACCEPT
+		$ sudo iptables OUTPUT -d gcc.alunos.di.fc.ul.pt -p icmp -j ACCEPT
 
 Testar seguintes ligações. Devem todas funcionar a seguir a aplicar as regras:
 
@@ -75,7 +75,7 @@ REGRAS, por esta ordem:
 
 	- icmp gcc.alunos.di.fc.ul.pt de saida:
 
-		$ sudo iptables -A -OUTPUT -d 10.101.151.5 -p icmp -j ACCEPT
+		$ sudo iptables -A OUTPUT -d 10.101.151.5 -p icmp -j ACCEPT
 
 	- acessos default das maquinas:
 		
