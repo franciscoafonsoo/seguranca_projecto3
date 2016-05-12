@@ -57,9 +57,9 @@ REGRAS, por esta ordem:
 
 	- ligações já estabelecida devem ser aceites: CHECK
 
-		$ sudo iptables –A INPUT –m state –-state ESTABLISHED,RELATED –j ACCEPT
+		$ sudo iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-		$ sudo iptables –A OUTPUT –m state –-state ESTABLISHED,RELATED –j ACCEPT
+		$ sudo iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 	- icmp mask de entrada:
 
@@ -85,9 +85,9 @@ REGRAS, por esta ordem:
 
 	- nao filtrar trafego loopback (lo):
 	
-		$ sudo iptables –A INPUT –i lo –j ACCEPT
+		$ sudo iptables -A INPUT -i lo -j ACCEPT
 	
-		$ sudo iptables –A OUTPUT –o lo –j ACCEPT
+		$ sudo iptables -A OUTPUT -o lo -j ACCEPT
 
 
 	- logs antes de aplicar a politica fechada.
