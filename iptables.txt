@@ -4,7 +4,11 @@ Criar um script para aplicar as regras todas seguidas.
 Aplicar regras nas maquinas do lab DI. Maquina utilizada (ifconfig)
 
 ifconfig:
-	ip:
+eth0      Link encap:Ethernet  HWaddr 3c:d9:2b:61:42:99  
+          inet addr:10.101.148.182  Bcast:10.101.151.255  Mask:255.255.252.0
+          inet6 addr: fe80::3ed9:2bff:fe61:4299/64 Scope:Link
+
+	ip: 10.101.148.182
 
 
 Ligações Permitidas INPUT:
