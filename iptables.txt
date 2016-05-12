@@ -1,25 +1,6 @@
-Criar um script para aplicar as regras todas seguidas.
-
-
-Aplicar regras nas maquinas do lab DI. Maquina utilizada (ifconfig)
-
-ifconfig:
-eth0      Link encap:Ethernet  HWaddr 3c:d9:2b:61:42:99  
-          inet addr:10.101.148.182  Bcast:10.101.151.255  Mask:255.255.252.0
-          inet6 addr: fe80::3ed9:2bff:fe61:4299/64 Scope:Link
-
-	ip: 10.101.148.182
-
-
 Ligações Permitidas INPUT:
 	
 	- icmp, only from local network (Mask:255.255.254.0 - 23 bits de idenficação da mask)
-
-		$ sudo iptables -A INPUT -s <ip da maquina lab>/23 -p icmp -j ACCEPT
-
-				OU
-
-		$ sudo iptables -A INPUT -s <ip da maquina>/<mask> -p icmp -j ACCEPT
 
 		é necessário identificar a mascara da sub-rede em bits para optimizar a performance do iptables. portanto:
 
@@ -31,18 +12,12 @@ Ligações Permitidas INPUT:
 
 	- ssh, only from gcc.alunos.di.fc.ul.pt
 
-		$ sudo iptables -A INPUT -s gcc.alunos.di.fc.ul.pt -p ssh -j ACCEPT
-
 	- clients from any ip (port 23457)
-		
-		$ sudo iptables -A INPUT -p tcp --dport 23457 -j ACCEPT
 
 
 Ligações Permitidas OUTPUT:
 
 	- icmp, only to gcc.alunos.di.fc.ul.pt
-
-		$ sudo iptables OUTPUT -d gcc.alunos.di.fc.ul.pt -p icmp -j ACCEPT
 
 Testar seguintes ligações. Devem todas funcionar a seguir a aplicar as regras:
 
@@ -99,6 +74,14 @@ REGRAS, por esta ordem:
 		$ sudo iptables -A OUTPUT -j DROP
 
 
+Aplicar regras nas maquinas do lab DI. Maquina utilizada:
 
+ifconfig:
+
+eth0      Link encap:Ethernet  HWaddr 3c:d9:2b:61:42:99  
+          inet addr:10.101.148.182  Bcast:10.101.151.255  Mask:255.255.252.0
+          inet6 addr: fe80::3ed9:2bff:fe61:4299/64 Scope:Link
+
+ip da maquina: 10.101.148.182
 
 
