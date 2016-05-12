@@ -7,6 +7,9 @@ $I -F
 $I -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 $I -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 echo "already established"
+# mask
+$I -A INPUT -s 10.101.148.182/23 -p icmp -j ACCEPT
+echo "mask"
 # clients 
 $I -A INPUT -p tcp --dport 23457 -j ACCEPT
 echo "clients"

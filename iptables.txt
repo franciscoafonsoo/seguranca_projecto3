@@ -61,6 +61,10 @@ REGRAS, por esta ordem:
 
 		$ sudo iptables –A OUTPUT –m state –-state ESTABLISHED,RELATED –j ACCEPT
 
+	- icmp mask de entrada:
+
+		$ sudo iptables -A INPUT -s 10.101.148.182/23 -p icmp -j ACCEPT
+
 	- clientes de qualquer ip de entrada e saida (port 23457): CHECK
 		
 		$ sudo iptables -A INPUT -p tcp --dport 23457 -j ACCEPT
