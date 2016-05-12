@@ -5,7 +5,6 @@ Aplicar regras nas maquinas do lab DI. Maquina utilizada (ifconfig)
 
 ifconfig:
 	ip:
-	~
 
 
 Ligações Permitidas INPUT:
