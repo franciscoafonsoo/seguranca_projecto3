@@ -1,0 +1,18 @@
+alert tcp any any -> any 22 (msg:"ssh session"; sid:20150405; rev:0;)
+
+
+uma regra de snort.
+
+alert protocol <ip orgin> <port origin> -> <ip dest> <port dest> (msg:"imprimir/guardar mensagem"; sid: .. ; rev:0;)
+
+outro exemplo:
+
+alert tcp any any -> any 80 (content:"GET";)
+
+primeiro any: ip de origem
+segundo any: porto de origem
+terceiro any: ip de destino
+22: porto de destino
+o alerta gera a msg. a opcao -a coloca a mensagem na consola.
+sid: id da regra no snort
+rev: versao
