@@ -16,3 +16,13 @@ terceiro any: ip de destino
 o alerta gera a msg. a opcao -a coloca a mensagem na consola.
 sid: id da regra no snort
 rev: versao
+
+AULA PRATICA:
+
+	alert tcp 10.101.149.41/23 any -> any 4567 (msg:"server session"; sid:20160405; rev:0; flags:S;)
+	alert icmp any any -> 10.101.149.41 any (msg:"ping"; sid:20160406; rev:0;)
+	threshold \
+		gen_id 1, sig_id 20160406, \
+		type threshold, \
+		track by_src, \
+		count 3, seconds 60
