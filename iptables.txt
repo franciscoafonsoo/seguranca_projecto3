@@ -46,7 +46,7 @@ REGRAS, por esta ordem:
 	
 	- ssh gcc.alunos.di.fc.ul.pt de entrada:
 
-		$ sudo iptables -A INPUT -s 10.101.151.5 -p tcp --dport ssh -j ACCEPT
+		$ sudo iptables -A INPUT -s gcc.alunos.di.fc.ul.pt -p tcp --dport ssh -j ACCEPT
 
 	- icmp gcc.alunos.di.fc.ul.pt de saida:
 
