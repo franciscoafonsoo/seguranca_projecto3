@@ -31,7 +31,7 @@ Tiago Maurício, nº 45105 \\
 \date{\today}
 \maketitle
 
-\chapter{Parte I: iptables}
+\chapter{\textit{iptables}}
 
 \section{Regras aplicadas}
 
@@ -154,7 +154,7 @@ DROP       all  --  anywhere             anywhere
 
 \clearpage
 
-\section{Testes}
+\section{Testes de ligações estabelecidas}
 
 \subsection{Teste da Regra nº 2}
 
@@ -188,14 +188,14 @@ rtt min/avg/max/mdev = 0.242/0.258/0.269/0.022 ms
 \texttt{10.101.148.182 - - [14/May/2016 17:44:47] 'GET' 400 -} \\
 
 
-\noindent Comando no cliente: \texttt{ telnet 10.101.148.183 23457}
+\noindent Comando no cliente: \texttt{telnet 10.101.148.183 23457}
 
 \noindent Resultado: \\
 
 \noindent \texttt{Trying 10.101.148.183...} \\
 \noindent \texttt{Connected to 10.101.148.183.} \\
-\noindent \texttt{...}
-
+\noindent \texttt{...} \\
+\
 \clearpage
 
 \subsection{Teste da Regra nº 4}
@@ -233,7 +233,7 @@ Last login: Sat May 14 22:18:26 2016 from 192.168.1.82
 
 \noindent Realizamos um ping da maquina gcc para testar esta regra: \\
 
-\noindent Comando: \texttt{\$ ping -c 3 10.101.148.4}
+\noindent Comando: \texttt{\$ ping -c 3 gcc.alunos.di.fc.ul.pt}
 
 \noindent Resultado:
 
@@ -250,5 +250,133 @@ PING gcc.alunos.di.fc.ul.pt (10.101.151.5) 56(84) bytes of data.
 3 packets transmitted, 3 received, 0% packet loss, time 2000ms
 rtt min/avg/max/mdev = 0.333/0.359/0.403/0.031 ms
 \end{lstlisting}
+
+\clearpage
+
+\section{Testes de ligações não estabelecidas}
+
+Estes testes visam mostrar que as regras do iptables não estabelecem ligações \\ não definidas.
+
+\begin{enumerate}
+
+\item Outras portas para verificar se os pacotes são filtrados.
+
+Comando no servidor: \texttt{python -m SimpleHTTPServer 3467}
+
+\noindent Resultado:
+
+\begin{lstlisting}
+Serving HTTP on 0.0.0.0 port 3467 ...
+\end{lstlisting}
+
+\noindent Comando no cliente: \texttt{telnet 10.101.148.166 3467}
+
+\noindent Resultado:
+\begin{lstlisting}
+Trying 10.101.148.166...
+\end{lstlisting}
+
+\item Outros pings não são permitidos
+
+Comando: \texttt{ping -c 3 10.101.148.161}
+
+\begin{lstlisting}
+PING 10.101.148.161 (10.101.148.161) 56(84) bytes of data.
+ping: sendmsg: Operation not permitted
+ping: sendmsg: Operation not permitted
+ping: sendmsg: Operation not permitted
+
+--- 10.101.148.161 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2016ms
+\end{lstlisting}
+
+\end{enumerate}
+
+\chapter{\textit{snort}}
+
+\section{Regras aplicadas}
+
+As seguintes regras foram escritas no ficheiro \textit{snort.config} por esta ordem, antes de serem feitos os testes:
+
+\begin{enumerate}
+
+\item Alerta para pacotes tcp cujo ip de destino seja o da maquina de teste, e que o porto de destino esteja entre 1 e 2048.
+
+\begin{lstlisting}
+alert tcp any any -> 10.101.148.166 1:2048 \
+(msg:"varrimento de portos"; sid:420; rev:0;)
+\end{lstlisting}
+
+\item Alerta para pacotes tcp cujo ip de destino seja o da maquina de teste, e que o porto de destino seja o 23457
+
+\begin{lstlisting}
+alert tcp any any -> 10.101.148.166 23457 \
+(msg: "tentativa de descobrir a password"; sid:666;rev:0;)
+\end{lstlisting}
+
+\item Filtro aplicado à primeira regra - Notifica \textbf{apenas} 1 vez a cada 2 minutos
+
+\begin{lstlisting}
+event_filter gen_id 1, sig_id 420, \
+type both, track by_dst, count 3, seconds 120
+\end{lstlisting}
+
+\item Filtro aplicado à segunda regra - Notifica 3 vezes a cada 30 segundos
+
+\begin{lstlisting}
+event_filter gen_id 1, sig_id 666, \
+type threshold, track by_src, count 3, seconds 30
+\end{lstlisting}
+
+\end{enumerate}
+
+\clearpage
+
+\section{Testes}
+
+\subsection{Na maquina a correr \textit{snort}:}
+
+\begin{enumerate}
+
+\item Teste da primeira regra e filtro:
+
+\texttt{Commencing packet processing (pid=3575)}
+\texttt{05/22-16:26:08.832675  [**] [1:420:0] varrimento de portos [**] [Priority: 0] }
+\texttt{{TCP} 10.101.148.161:45246 -> 10.101.148.166:3}
+
+\item Teste da segunda regra e filtro
+
+\texttt{Commencing packet processing (pid=3564)}
+\texttt{05/22-16:24:35.084257  [**] [1:666:0] tentativa de descobrir a password [**] [Priority: 0]}
+\texttt{{TCP} 10.101.148.161:35699 -> 10.101.148.166:23457}
+
+\end{enumerate}
+
+\subsection{Na maquina remota:}
+
+\begin{enumerate}
+
+\item Teste da primeira regra e filtro:
+
+Comando: \texttt{netcat -zv 10.101.148.166 23457}
+
+\begin{lstlisting}
+Connection to 10.101.148.166 23457 port [tcp/*] succeeded!
+\end{lstlisting}
+
+\item Teste da segunda regra e filtro
+
+\noindent Comando: \texttt{netcat -zv 10.101.148.166 1-2048}
+
+\begin{lstlisting}
+Connection to 10.101.148.166 port 1 (tcp) failed: \
+Connection refused
+...
+Connection to 10.101.148.166 port 2048 (tcp) failed: \
+Connection refused
+\end{lstlisting}
+
+\end{enumerate}
+
 
 \end{document}
